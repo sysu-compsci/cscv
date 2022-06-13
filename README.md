@@ -1,3 +1,3 @@
-# CSCV on IPDPS 2022
+# CSCV
 
-We will release the workload and code for our paper on IPDPS 2022 soon, no later than the date of the conference.
+The workload generator has been released. We are arranging the main code, please watch this repository for furthur updates...
