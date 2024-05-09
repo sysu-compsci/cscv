@@ -52,7 +52,7 @@ public:
 
     // thread local
     static const Logger& get_instance() {
-        static __thread Logger instance;
+        static Logger instance;
         return instance;
     }
 

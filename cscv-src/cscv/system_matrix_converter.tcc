@@ -2,7 +2,9 @@
 
 #include <algorithm>
 
+#if defined(__x86_64__) || defined(__i386__)
 #include <nmmintrin.h>
+#endif
 
 #include "arch/naive_numa_util.hpp"
 #include "cscv/flags.hpp"

@@ -147,7 +147,7 @@ Data_holder<Element_type>::~Data_holder() {
         delete m_csc_full;
     if (m_csr_full)
         delete m_csr_full;
-
+#if defined(__x86_64__) || defined(__i386__)
     if (m_csr_mkl_full) {
         mkl_sparse_destroy(*m_csr_mkl_full);
         delete m_csr_mkl_full;
@@ -164,6 +164,7 @@ Data_holder<Element_type>::~Data_holder() {
         mkl_sparse_destroy(*m_csc_trans_mkl_full);
         delete m_csc_trans_mkl_full;
     }
+#endif
 
     if (m_x_input)
         delete m_x_input;
@@ -189,8 +190,10 @@ void Data_holder<Element_type>::thread_local_init() {
 template <class Element_type>
 void Data_holder<Element_type>::set_num_threads(int num_threads) {
     m_num_threads = num_threads;
+    #if defined(__x86_64__) || defined(__i386__)
     mkl_set_dynamic(0);
     mkl_set_num_threads(1);
+    #endif
     omp_set_nested(0);
 
     if (m_thread_pool)

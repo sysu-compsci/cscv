@@ -23,12 +23,13 @@ double Data_holder<Element_type>::compute_full_coo_y_ax() {
 
 template <class Element_type>
 double Data_holder<Element_type>::compute_full_csc_mkl_y_ax() {
+    auto stt = std::chrono::high_resolution_clock::now();
     ASSERT_AND_PRINTF(m_generated_full_csc, "full csc is not generated!\n");
     m_current_result_type = Result_type::MKL_CSC_FULL;
 
+#if defined(__x86_64__) || defined(__i386__)
     mkl_set_num_threads(m_num_threads);
     ASSERT_AND_PRINTF(m_num_threads == mkl_get_max_threads(), "thread count %d != %d\n", m_num_threads, mkl_get_max_threads());
-    auto stt = std::chrono::high_resolution_clock::now();
 
     matrix_descr mtx_descr;
     mtx_descr.type = SPARSE_MATRIX_TYPE_GENERAL;
@@ -46,9 +47,10 @@ double Data_holder<Element_type>::compute_full_csc_mkl_y_ax() {
         assert(false);
     }
 
-    auto edt = std::chrono::high_resolution_clock::now();
     mkl_set_num_threads(1);
+#endif
 
+    auto edt = std::chrono::high_resolution_clock::now();
     if (m_y_result_table.get_result_size((int)Result_type::MKL_CSC_FULL) == 0) {
         m_y_result_table.collect_data_arr_and_memset_0((int)Result_type::MKL_CSC_FULL, m_y_tmp->get_size(), &(m_y_tmp->at(0)));
     }
@@ -61,10 +63,11 @@ template <class Element_type>
 double Data_holder<Element_type>::compute_full_csr_mkl_y_ax() {
     ASSERT_AND_PRINTF(m_generated_full_csr, "full csr is not generated!\n");
     m_current_result_type = Result_type::MKL_CSR_FULL;
+    auto stt = std::chrono::high_resolution_clock::now();
+#if defined(__x86_64__) || defined(__i386__)
 
     mkl_set_num_threads(m_num_threads);
     ASSERT_AND_PRINTF(m_num_threads == mkl_get_max_threads(), "thread count %d != %d\n", m_num_threads, mkl_get_max_threads());
-    auto stt = std::chrono::high_resolution_clock::now();
 
     matrix_descr mtx_descr;
     mtx_descr.type = SPARSE_MATRIX_TYPE_GENERAL;
@@ -82,8 +85,9 @@ double Data_holder<Element_type>::compute_full_csr_mkl_y_ax() {
         assert(false);
     }
 
-    auto edt = std::chrono::high_resolution_clock::now();
     mkl_set_num_threads(1);
+#endif
+    auto edt = std::chrono::high_resolution_clock::now();
 
     if (m_y_result_table.get_result_size((int)Result_type::MKL_CSR_FULL) == 0) {
         m_y_result_table.collect_data_arr_and_memset_0((int)Result_type::MKL_CSR_FULL, m_y_tmp->get_size(), &(m_y_tmp->at(0)));

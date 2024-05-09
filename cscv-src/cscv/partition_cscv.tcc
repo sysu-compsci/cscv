@@ -24,9 +24,9 @@ double Data_holder<Element_type>::init_blocks_cscvb() {
                 Range_1d angle_range(block->m_start_angle, block->m_angle_count);
 
                 if (!that->m_comp_cfg.m_gen_constant)
-                    block->m_coo_block = that->m_mtx_generator->generate_system_matrix<Element_type>(pixel_range, angle_range);
+                    block->m_coo_block = that->m_mtx_generator->template generate_system_matrix<Element_type>(pixel_range, angle_range);
                 else
-                    block->m_coo_block = that->m_mtx_generator->generate_system_matrix_constant<Element_type>(pixel_range, angle_range);
+                    block->m_coo_block = that->m_mtx_generator->template generate_system_matrix_constant<Element_type>(pixel_range, angle_range);
 
                 Dense_vector<int> tmp_lhss(block->m_angle_count, &part->m_y_lhss->at(block->m_start_angle - part->m_start_angle));
                 Dense_vector<int> tmp_rhss(block->m_angle_count, &part->m_y_rhss->at(block->m_start_angle - part->m_start_angle));

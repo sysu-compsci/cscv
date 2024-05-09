@@ -62,7 +62,7 @@ Test_performer::Test_performer(int argc, char** argv) {
 
     // setting default value
 
-    int nthreads = mkl_get_max_threads();
+    int nthreads = omp_get_max_threads();
     int x_part = -1, y_part = -1, angle_part = 1;
     int workload_id = 1;
     int block_x = 16, block_y = 16, block_angle = 16;

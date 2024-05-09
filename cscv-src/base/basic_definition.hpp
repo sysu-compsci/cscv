@@ -2,7 +2,10 @@
 
 #include <assert.h>
 #include <memory.h>
+
+#if defined(__x86_64__) || defined(__i386__)
 #include <mkl.h>
+#endif
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -299,6 +302,7 @@ T get_arr_max(const T* arr, int size) {
     return ret;
 }
 
+#if defined(__x86_64__) || defined(__i386__)
 static inline void __attribute__ ((__gnu_inline__, __always_inline__, __artificial__)) check_mkl_sparse_ret(sparse_status_t ret)  {
     if (ret == SPARSE_STATUS_SUCCESS)
         return;
@@ -327,6 +331,7 @@ static inline void __attribute__ ((__gnu_inline__, __always_inline__, __artifici
         assert(false);
     }
 }
+#endif
 
 static inline std::string extended_string_by_char(std::string str, int final_size, char c) {
     int ori_size = str.size();

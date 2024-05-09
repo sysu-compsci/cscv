@@ -1,7 +1,9 @@
 #pragma once
 
+#if defined(__x86_64__) || defined(__i386__)
 #include <immintrin.h>
 #include <mkl.h>
+#endif
 
 #include "base/basic_definition.hpp"
 #include "data/data_container.hpp"
@@ -12,6 +14,19 @@
 #if !defined(__AVX512F__)
 constexpr bool c_vexpand_enabled = false;
 // for compilation
+
+#if defined(__x86_64__) || defined(__i386__)
+#else
+// define types for __m512, and etc
+typedef float __m512 __attribute__((__vector_size__(64), __aligned__(64)));
+typedef double __m512d __attribute__((__vector_size__(64), __aligned__(64)));
+typedef float __m256 __attribute__((__vector_size__(32), __aligned__(32)));
+typedef double __m256d __attribute__((__vector_size__(32), __aligned__(32)));
+typedef float __m128 __attribute__((__vector_size__(16), __aligned__(16)));
+
+typedef uint16_t __mmask16;
+typedef uint8_t __mmask8;
+#endif
 
 static inline __m512 vexpand_loadu_floatv16 (__mmask16 __U, void const *__P) { return __m512(); }
 static inline __m256 vexpand_loadu_floatv8 (__mmask8 __U, void const *__P) { return __m256(); }

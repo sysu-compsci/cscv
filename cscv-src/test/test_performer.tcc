@@ -8,19 +8,6 @@ void Test_performer::run_inner() {
     img_param.set_global_img_size(m_global_img_size);
     img_param.set_global_img_coord(m_global_img_x_start, m_global_img_y_start);
 
-    auto& numa_util_instance = Naive_NUMA_util::get_instance();
-    if (m_comp_cfg.m_mempool_mb > 0) {
-        uint64_t mempool_size = m_comp_cfg.m_mempool_mb;
-        mempool_size *= std::CPUInfoUtil::I().total_socket_count_;
-        mempool_size *= 1024 * 1024;
-
-        printf("socket count: %d\n", std::CPUInfoUtil::I().total_socket_count_);
-        printf("mempool_mb: %d\n", m_comp_cfg.m_mempool_mb);
-        printf("mempool_size: %lu\n", mempool_size);
-
-        numa_util_instance.create_seq_mem_pool(m_comp_cfg.m_mempool_mb * 1024UL * 1024UL * std::CPUInfoUtil::I().total_socket_count_);
-    }
-
     Partitioner_cscv cscv_partition(img_param, m_angle_group_size, m_img_x_group_size, m_img_y_group_size, m_angle_part, m_img_x_part, m_img_y_part);
 
     cscv_partition.set_pxg_size(m_pxg_size);

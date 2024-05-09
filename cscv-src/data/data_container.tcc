@@ -126,7 +126,7 @@ void CSR_matrix<Element_type>::multiply_dense_vector(const Dense_vector<Element_
 		out_vec.at(row/* + m_sub_start_row*/) = res;
 	}
 }
-
+#if defined(__x86_64__) || defined(__i386__)
 template <class Element_type>
 sparse_matrix_t* CSR_matrix<Element_type>::convert_to_mkl_matrix() {
     static_assert(std::is_same<MKL_INT, int>::value);
@@ -164,6 +164,7 @@ sparse_matrix_t* CSR_matrix<Element_type>::convert_to_mkl_matrix_csc_trans() {
 
     return ret;
 }
+#endif
 
 template <class Element_type>
 CSC_matrix<Element_type>::CSC_matrix(int num_row, int num_col, int sub_start_row, int sub_start_col, int nz_count) :
@@ -197,6 +198,7 @@ void CSC_matrix<Element_type>::multiply_dense_vector(const Dense_vector<Element_
 	}
 }
 
+#if defined(__x86_64__) || defined(__i386__)
 template <class Element_type>
 sparse_matrix_t* CSC_matrix<Element_type>::convert_to_mkl_matrix() {
     static_assert(std::is_same<MKL_INT, int>::value);
@@ -233,6 +235,7 @@ sparse_matrix_t* CSC_matrix<Element_type>::convert_to_mkl_matrix_csr_trans() {
 
     return ret;
 }
+#endif
 
 template <class Element_type>
 COO_matrix_buffer<Element_type>::COO_matrix_buffer(int mat_rows, int mat_cols, int sub_start_row, int sub_start_col) {

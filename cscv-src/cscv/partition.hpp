@@ -1,6 +1,8 @@
 #pragma once
 
+#if defined(__x86_64__) || defined(__i386__)
 #include <mkl.h>
+#endif
 
 #include "arch/omp_thread_pool.hpp"
 #include "arch/pthread_timer.hpp"
@@ -239,10 +241,12 @@ class Data_holder {
     COO_matrix_buffer<Element_type>* m_coo_full = nullptr;
     CSC_matrix<Element_type>* m_csc_full = nullptr;
     CSR_matrix<Element_type>* m_csr_full = nullptr;
+    #if defined(__x86_64__) || defined(__i386__)
     sparse_matrix_t* m_csc_mkl_full = nullptr;
     sparse_matrix_t* m_csr_mkl_full = nullptr;
     sparse_matrix_t* m_csc_trans_mkl_full = nullptr;
     sparse_matrix_t* m_csr_trans_mkl_full = nullptr;
+    #endif
 
     Image_CT<Element_type> *m_x_input = nullptr;
     Image_CT<Element_type> *m_x_tmp = nullptr;

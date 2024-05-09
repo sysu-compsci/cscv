@@ -1,6 +1,7 @@
 #pragma once
-
+#if defined(__x86_64__) || defined(__i386__)
 #include <mkl.h>
+#endif
 
 #include <string>
 
@@ -122,8 +123,10 @@ public:
     void multiply_dense_vector(const Dense_vector<Element_type>& in_vec, const Dense_vector<Element_type>& out_vec);
     void multiply_dense_vector_trans(const Dense_vector<Element_type>& in_vec, const Dense_vector<Element_type>& out_vec);
 
+    #if defined(__x86_64__) || defined(__i386__)
     sparse_matrix_t* convert_to_mkl_matrix();
     sparse_matrix_t* convert_to_mkl_matrix_csc_trans();
+    #endif
 
 // private:
     int m_num_row, m_num_col;
@@ -155,8 +158,10 @@ public:
     void multiply_dense_vector(const Dense_vector<Element_type>& in_vec, const Dense_vector<Element_type>& out_vec);
     void multiply_dense_vector_trans(const Dense_vector<Element_type>& in_vec, const Dense_vector<Element_type>& out_vec);
 
+#if defined(__x86_64__) || defined(__i386__)
     sparse_matrix_t* convert_to_mkl_matrix();
     sparse_matrix_t* convert_to_mkl_matrix_csr_trans();
+#endif
 
     bool m_flag_row_sorted = false;
 

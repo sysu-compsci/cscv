@@ -38,9 +38,25 @@ static inline Timers_instance_map dump_timers_map_and_clear() {
     return ret;
 }
 
+static uint64_t rdtsc_cross() {
+#if defined(__x86_64__) || defined(__i386__)
+    uint32_t lo, hi;
+    // 使用内联汇编读取时间戳
+    asm volatile ("rdtsc" : "=a" (lo), "=d" (hi));
+    return ((uint64_t)hi << 32) | lo;
+#elif defined(__ARM_ARCH)
+    uint64_t virtual_timer_value;
+    // 在 ARM 架构中读取虚拟计数器
+    asm volatile("mrs %0, cntvct_el0" : "=r" (virtual_timer_value));
+    return virtual_timer_value;
+#else
+#error "Platform not supported!"
+#endif
+}
+
 static inline uint64_t rdtsc_interval() {
     static __thread uint64_t last_cc;
     uint64_t tmp = last_cc;
-    last_cc = __builtin_ia32_rdtsc();
+    last_cc = rdtsc_cross();
     return last_cc - tmp;
 }

@@ -42,31 +42,35 @@ template <class Element_type>
 double Data_holder<Element_type>::init_full_csc() {
     if (m_generated_full_csc)
         return 0;
+    double stt = omp_get_wtime();
+#if defined(__x86_64__) || defined(__i386__)
     mkl_set_num_threads(m_num_threads);
     ASSERT_AND_PRINTF(m_generated_full_coo, "full coo is not generated!\n");
-    double stt = omp_get_wtime();
     m_csc_full = m_coo_full->template convert_to_csc_matrix<Element_type>();
     m_csc_mkl_full = m_csc_full->convert_to_mkl_matrix();
     m_csr_trans_mkl_full = m_csc_full->convert_to_mkl_matrix_csr_trans();
     m_generated_full_csc = true;
     m_init_timer_table.collect_data((int)Init_process_type::CSC_FULL, omp_get_wtime() - stt);
     mkl_set_num_threads(1);
+#endif
     return omp_get_wtime() - stt;
 }
 
 template <class Element_type>
 double Data_holder<Element_type>::init_full_csr() {
+    double stt = omp_get_wtime();
+#if defined(__x86_64__) || defined(__i386__)
     if (m_generated_full_csr)
         return 0;
     mkl_set_num_threads(m_num_threads);
     ASSERT_AND_PRINTF(m_generated_full_coo, "full coo is not generated!\n");
-    double stt = omp_get_wtime();
     m_csr_full = m_coo_full->template convert_to_csr_matrix<Element_type>();
     m_csr_mkl_full = m_csr_full->convert_to_mkl_matrix();
     m_csc_trans_mkl_full = m_csr_full->convert_to_mkl_matrix_csc_trans();
     m_generated_full_csr = true;
     m_init_timer_table.collect_data((int)Init_process_type::CSR_FULL, omp_get_wtime() - stt);
     mkl_set_num_threads(1);
+#endif
     return omp_get_wtime() - stt;
 }
 
@@ -119,9 +123,9 @@ double Data_holder<Element_type>::init_blocks_coo_debug_only() {
                 Range_1d angle_range(block->m_start_angle, block->m_angle_count);
 
                 if (!that->m_comp_cfg.m_gen_constant)
-                    block->m_coo_block = that->m_mtx_generator->generate_system_matrix<Element_type>(pixel_range, angle_range);
+                    block->m_coo_block = that->m_mtx_generator->template generate_system_matrix<Element_type>(pixel_range, angle_range);
                 else
-                    block->m_coo_block = that->m_mtx_generator->generate_system_matrix_constant<Element_type>(pixel_range, angle_range);
+                    block->m_coo_block = that->m_mtx_generator->template generate_system_matrix_constant<Element_type>(pixel_range, angle_range);
             }
         }
     };

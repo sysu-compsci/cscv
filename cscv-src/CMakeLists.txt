@@ -15,6 +15,9 @@ endif()
 # if icpc
 if (CMAKE_CXX_COMPILER MATCHES "icpc")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -xHost -qmkl -ltbb -qopenmp -std=c++17 -g -diag-disable=10441")
+# else, for clang++ on arm
+elseif (CMAKE_CXX_COMPILER MATCHES "clang")
+    set(CMAKE_CXX_FLAGS "-O3 -march=native -g -fopenmp -std=c++17 -fno-strict-aliasing -Wno-psabi")
 # else, for g++
 else()
     # use intel omp
